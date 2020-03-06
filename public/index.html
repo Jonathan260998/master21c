@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Juego</title>
+    <style>
+      body {
+        /* Rompe el flujo normal pasa poder hacer swipe hacia abajo. */
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        /* ocupa todo el espacio. */
+        width: 100%;
+        height: 100%;
+        /* Elimina márgenes. */
+        margin: 0;
+        /* Evita el scroll */
+        overflow: hidden;
+        background-image: url(https://i.ibb.co/yBSzxp6/canva-lord.jpg);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100% 100%;
+      }
+      .figura {
+        position: absolute;
+        display: block;
+        font-size: 60px;
+      }
+      elfo-web {
+        position: absolute;
+        font-size: 45px;
+      }
+      elfo-webdos {
+        position: absolute;
+        font-size: 45px;
+      }
+      maga-web {
+        position: absolute;
+        font-size: 45px;
+      }
+      troll-web {
+        position: absolute;
+        font-size: 45px;
+      }
+      troll-webdos {
+        position: absolute;
+        font-size: 45px;
+      }
+      orco-web {
+        position: absolute;
+        font-size: 45px;
+      }
+      orco-webdos {
+        position: absolute;
+        font-size: 45px;
+      }
+
+    </style>
+    <script>
+      function desvía(i) {
+        return i + 10 - 20 * Math.random();
+      }
+      customElements.define("figura-anillo", class extends HTMLElement {
+        connectedCallback() {
+          this.classList.add("figura")
+          this.innerHTML = "&#x1f48d;";
+          this.style.fontSize = "45px";
+        }
+        muévete(x, y) {
+          this.style.left = `${desvía(x)}px`;
+          this.style.top = `${desvía(y)}px`;
+        }
+      });
+      customElements.define("figura-maga", class extends HTMLElement {
+        connectedCallback() {
+          this.classList.add("figura")
+          this.innerHTML = "&#x1f9da;";
+          this.style.fontSize = "45px";
+        }
+        muévetedoses(x, y) {
+          this.style.right = `${desvía(x)}px`;
+          this.style.top = `${desvía(y)}px`;
+        }
+      });
+      customElements.define("elfo-web", class extends HTMLElement {
+        connectedCallback() {
+          this.x = 0;
+          this.innerHTML = "&#x1f9dd;";
+        }
+        muévete() {
+          let y = 100;
+          this.style.right = `${this.x}px`;
+          this.style.top = `${y}px`;
+          this.x = this.x > 800 ? 0 : this.x + 10;
+        }
+      });
+      customElements.define("elfo-webdos", class extends HTMLElement {
+        connectedCallback() {
+          this.x = 0;
+          this.innerHTML = "&#x1f9dd;";
+        }
+        muévetedos() {
+          let y = 100;
+          this.style.left = `${this.x}px`;
+          this.style.top = `${y}px`;
+          this.x = this.x > 800 ? 0 : this.x + 10;
+        }
+      });
+      customElements.define("troll-web", class extends HTMLElement {
+        connectedCallback() {
+          this.x = 0;
+          this.innerHTML = "&#x1f479;";
+        }
+        muévete() {
+          let y = 180;
+          this.style.right = `${this.x}px`;
+          this.style.top = `${y}px`;
+          this.x = this.x > 800 ? 0 : this.x + 30;
+        }
+      });
+      customElements.define("troll-webdos", class extends HTMLElement {
+        connectedCallback() {
+          this.x = 0;
+          this.innerHTML = "&#x1f479;";
+        }
+        muévetetroll() {
+          let y = 180;
+          this.style.left = `${this.x}px`;
+          this.style.top = `${y}px`;
+          this.x = this.x > 800 ? 0 : this.x + 30;
+        }
+      });
+      customElements.define("orco-web", class extends HTMLElement {
+        connectedCallback() {
+          this.x = 0;
+          this.innerHTML = "&#x1f9df;";
+        }
+        muévete() {
+          let y = 240;
+          this.style.right = `${this.x}px`;
+          this.style.top = `${y}px`;
+          this.x = this.x > 800 ? 0 : this.x + 25;
+        }
+      });
+      customElements.define("orco-webdos", class extends HTMLElement {
+        connectedCallback() {
+          this.x = 0;
+          this.innerHTML = "&#x1f9df;";
+        }
+        muéveteorco() {
+          let y = 240;
+          this.style.left = `${this.x}px`;
+          this.style.top = `${y}px`;
+          this.x = this.x > 800 ? 0 : this.x + 25;
+        }
+      });
+      customElements.define("figura-gandalf", class extends HTMLElement {
+        connectedCallback() {
+          this.classList.add("figura")
+          this.innerHTML += "&#x1f9d9";
+          this.x = 650;
+          this.y = 460;
+        }
+        sube() {
+          this.y -= 20;
+          this.muévete()
+          this.muévetedoses();
+        }
+        baja() {
+          this.y += 20;
+          this.muévete()
+          this.muévetedoses();
+        }
+        izquierda() {
+          this.x -= 20;
+          this.muévete()
+          this.muévetedoses();
+        }
+        derecha() {
+          this.x += 20;
+          this.muévete()
+          this.muévetedoses();
+        }
+        muévete() {
+          this.anillos = Array.from(document.querySelectorAll("figura-anillo"));
+          this.style.left = `${this.x}px`;
+          this.style.top = `${this.y}px`;
+          var incr = 60;
+          for (const anillo of this.anillos) {
+            anillo.muévete(this.x + incr, this.y + incr);
+            incr += 60;
+          }
+        }
+        muévetedoses() {
+          this.magas = Array.from(document.querySelectorAll("figura-maga"));
+          this.style.right = `${this.x}px`;
+          this.style.top = `${this.y}px`;
+          var incr = 60;
+          for (const maga of this.magas) {
+            maga.muévetedoses(this.x + incr, this.y + incr);
+            incr += 60;
+          }
+        }
+      });
+
+    </script>
+  </head>
+  <body>
+    <figura-gandalf id="mago"></figura-gandalf>
+    <figura-anillo></figura-anillo>
+    <figura-anillo></figura-anillo>
+    <figura-maga></figura-maga>
+    <elfo-web id="elfo"></elfo-web>
+    <elfo-webdos id="elfodos"></elfo-webdos>
+    <troll-web id="troll"></troll-web>
+    <troll-webdos id="trolldos"></troll-webdos>
+    <orco-web id="orco"></orco-web>
+    <orco-webdos id="orcodos"></orco-webdos>
+    <footer></footer>
+    <script>
+      mago.muévete();
+      mago.muévetedoses();
+      document.addEventListener("keydown", evt => {
+        switch (evt.key) {
+          case "ArrowLeft":
+            mago.izquierda();
+            break;
+          case "ArrowRight":
+            mago.derecha();
+            break;
+          case "ArrowUp":
+            mago.sube();
+            break;
+          case "ArrowDown":
+            mago.baja();
+            break;
+        }
+      });
+      let iniciaX = null;
+      let iniciaY = null;
+      document.addEventListener('touchstart', evt => {
+        const toquInicial = evt.touches[0];
+        iniciaX = toquInicial.clientX;
+        iniciaY = toquInicial.clientY;
+      });
+      document.addEventListener('touchmove', evt => {
+        if (iniciaX && iniciaY) {
+          const mueve = evt.touches[0];
+          var mueveX = mueve.clientX;
+          var mueveY = mueve.clientY;
+          var difX = mueveX - iniciaX;
+          var difY = mueveY - iniciaY;
+          // Checa que el movimiento no sea muy corto,
+          if (Math.abs(difX) + Math.abs(difY) > 150) {
+            if (Math.abs(difX) > Math.abs(difY)) {
+              if (difX > 70) {
+                mago.derecha();
+              } else {
+                mago.izquierda();
+              }
+            } else if (difY > 70) {
+              mago.baja();
+            } else {
+              mago.sube();
+            }
+            // Reinicia valores.
+            iniciaX = null;
+            iniciaY = null;
+          }
+        }
+      });
+    </script>
+    <script>
+      setInterval(() => elfo.muévete(), 120);
+    </script>
+    <script>
+      setInterval(() => elfodos.muévetedos(), 120);
+    </script>
+    <script>
+       setInterval(() => troll.muévete(), 120);
+    </script>
+    <script>
+      setInterval(() => trolldos.muévetetroll(), 120);
+    </script>
+    <script>
+      setInterval(() => orco.muévete(), 120);
+    </script>
+     <script>
+      setInterval(() => orcodos.muéveteorco(), 120);
+    </script>
+  </body>
+</html>
